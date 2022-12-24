@@ -111,7 +111,7 @@
                 <div class="box-3 d-flex align-items-end">
                   <div class="inner-box">
                     <img src="./assets/thunder.svg" alt="" />
-                    <h3>Branding Designer</h3>
+                    <h3>Software Engineer</h3>
                   </div>
                 </div>
               </div>
@@ -171,10 +171,14 @@
               </div>
             </div>
             <div class="col-lg-4 offset-lg-3">
-              <form>
+              <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+                <strong>Selamat!</strong> Pesan Anda Telah Terkirim.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              <form name="Submit Form to Google Sheets">
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label text-white">Your Name</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="name" />
+                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="nama" />
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label text-white">Email address</label>
@@ -183,10 +187,13 @@
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label text-white">Tell me about the project</label>
-                  <textarea name="messege" id="" cols="55" rows="10" style="resize: none" class="rounded"></textarea>
+                  <textarea name="pesan" id="" cols="55" rows="10" style="resize: none" class="rounded"></textarea>
                 </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary btn-kirim">Submit</button>
+                <button class="btn btn-primary btn-loading d-none btn-loading" type="button" disabled>
+                  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+                </button>
               </form>
             </div>
           </div>
@@ -201,5 +208,29 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwjhAoBe0vDX01haKih11r9dD4_cgzKeu0PMs5x98P5Ao-1AqWhJEZSwsqPbBX_kCLTIA/exec";
+      const form = document.forms["Submit Form to Google Sheets"];
+      const btnKirim = document.querySelector(".btn-kirim");
+      const btnLoading = document.querySelector(".btn-loading");
+      const pengingat = document.querySelector(".my-alert");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        //tampilkan loading sambil menunggu succes
+        btnLoading.classList.toggle("d-none");
+        btnKirim.classList.toggle("d-none");
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            btnLoading.classList.toggle("d-none");
+            btnKirim.classList.toggle("d-none");
+            //tampil alert
+            pengingat.classList.toggle("d-none");
+            form.reset();
+            console.log("Success!", response);
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
